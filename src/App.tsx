@@ -12,22 +12,15 @@ export const App:FC = ():JSX.Element => {
   const {data, size, setSize, error, isLoading} = useSWRInfinite((index) => `https://pokeapi.co/api/v2/pokemon?offset=${index*2*10}&limit=10`, fetcher, {initialSize: 1, revalidateFirstPage: false});
   const [pokemons, setPokemons] = useState<Array<any>>([]);
 
+  useEffect(() => {
+    if(data) {
+      const allResults = data.flatMap((page) => page.results)
+      setPokemons(allResults);
+    }
+  }, [data])
+
   if(error) return (<p>An error is occured.</p>);
   if (isLoading) return (<p>"Loading..."</p>);
-
-    // Use a single useEffect for setting Pokemon data
-    useEffect(() => {
-      if (data) {
-        const fetchData = async () => {
-          const detailedData = await Promise.all(
-            data.flatMap((page) => page.results.map((pokemon) => fetcher(pokemon.url)))
-          );
-          setPokemons((prevPokemons) => [...prevPokemons, ...detailedData]);
-        };
-  
-        fetchData();
-      }
-    }, [data]);
 
   return (
     <main className='App'>
