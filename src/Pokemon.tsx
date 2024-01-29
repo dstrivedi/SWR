@@ -9,7 +9,7 @@ export const Pokemon = ({pokemon}) => {
 
     const {data, error, isLoading} = useSWR(url, fetcher);
 
-    console.log(data);
+    // console.log(data);
 
     if(error) return <h1>Something went wrong!</h1>;
     if(isLoading) return <h1>Loading...</h1>
